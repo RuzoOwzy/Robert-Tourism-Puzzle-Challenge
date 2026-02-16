@@ -54,6 +54,9 @@
 		  font-weight: bold;
 		  text-decoration: none;
 		}
+			.instruction a:hover {
+				text-decoration: underline;
+			}
 
 		.main-content {
 		  display: flex;
@@ -147,7 +150,7 @@
 		  padding: 8px;
 		  border-radius: 5px;
 		  border: 1px solid #ccc;
-		  background-color: #4caf50; /* medium green */
+		  background-color: #777;
 		  color: #fff;
 		}
 
@@ -222,7 +225,7 @@
 	  <!-- Right panel -->
 	  <div class="right-panel">
 		<div class="controls">
-		  <button onclick="scrambleCube()">Scramble</button>
+		  <button onclick="initializeOScrambleCube()">Scramble</button>
 		  <button id="startStopBtn" onclick="toggleStartStop()">Start</button>
 		  <button id="pauseBtn" onclick="pauseTimer()">Pause</button>
 		</div>
@@ -241,17 +244,38 @@
 	</footer>
 
 <script>
-  AnimCube3("id=cube&buttonbar=0");
-
   let timerInterval;
   let startTime;
   let elapsedTime = 0;
   let running = false;
   let paused = false;
+  let puzzleSolved = false;  
   const givenTimeMs = 5 * 60 * 1000;
 
   const codeInput = document.getElementById("offerCodeInput");
+  const copyBtn = document.querySelector(".code-box button");
+  
+  initializeOScrambleCube();
+  
+  bindEvents();
+  
+  function bindEvents(){
+     copyBtn.addEventListener("click", function () {
+	  codeInput.select();
+	  codeInput.setSelectionRange(0, 99999);
+	  document.execCommand("copy");
+	});
+  }
 
+  function initializeOScrambleCube() {
+      puzzleSolved = false;
+	  codeInput.value = "";
+	  codeInput.disabled = true;
+	  copyBtn.disabled = true;
+
+	  const randomMoves = Math.floor(Math.random() * (50 - 20 + 1)) + 20;
+	  AnimCube3("id=cube&scramble=2&randmoves=" + randomMoves + "&buttonbar=0&solved=onCubeSolved");
+   }
   function toggleStartStop() {
     const btn = document.getElementById("startStopBtn");
     const pauseBtn = document.getElementById("pauseBtn");
@@ -326,12 +350,40 @@
       `${String(seconds).padStart(2,'0')}:` +
       `${String(milliseconds).padStart(2,'0')}`;
   }
+  function generateOfferCode() {
+	  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	  let code = "";
 
-  function scrambleCube() {
-    AnimCube3("id=cube&move=random&buttonbar=0");
-  }
+	  for (let i = 0; i < 9; i++) {
+		code += chars.charAt(Math.floor(Math.random() * chars.length));
+	  }
+
+	  return code;
+}
+function onCubeSolved() {
+console.log("SOLVED.........");
+  if (puzzleSolved) return; // prevent duplicate execution
+  puzzleSolved = true;
+
+  // Stop timer
+  clearInterval(timerInterval);
+  running = false;
+  paused = false;
+
+  document.getElementById("startStopBtn").textContent = "Start";
+  document.getElementById("pauseBtn").style.visibility = "hidden";
+
+  // Generate offer code
+  const newCode = generateOfferCode();
+
+  codeInput.value = newCode;
+  codeInput.disabled = false;
+
+  copyBtn.disabled = false;
+
+  codeInput.style.backgroundColor = "#4caf50"; // ensure green
+}
 </script>
 
 </body>
-
 </html>
