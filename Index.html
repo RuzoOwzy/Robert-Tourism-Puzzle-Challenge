@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Robert Tourism Puzzle Challenge</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<script src="https://animcubejs.cubing.net/AnimCube3.js"></script>
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+	<style>
+		* { box-sizing: border-box; }
+
+		body {
+		  font-family: 'Roboto', Arial, sans-serif;
+		  background: #f4f4f4;
+		  margin: 0;
+		  padding: 0;
+		}
+
+		.header-container {
+		  width: 720px;
+		  max-width: 95%;
+		  margin: 5px auto;
+		  padding: 5px;
+		  background: linear-gradient(to right, #b2dfdb, #80cbc4);
+		  border-radius: 10px;
+		  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+		  text-align: center;
+		}
+
+		.logo {
+		  font-size: 36px;
+		  font-weight: 900;
+		  color: #00796b;
+		  margin: 0;
+		  line-height: 1.2;
+		}
+
+		.page-title {
+		  font-size: 28px;
+		  font-weight: bold;
+		  color: #004d40;
+		  margin: 5px 0px;
+		}
+
+		.instruction {
+		  font-size: 16px;
+		  color: #004d40;
+		  line-height: 1.4;
+		}
+
+		.instruction a {
+		  color: #004d40;
+		  font-weight: bold;
+		  text-decoration: none;
+		}
+
+		.main-content {
+		  display: flex;
+		  justify-content: center;
+		  align-items: flex-start;
+		  margin: 20px 10px 20px 10px;
+		  gap: 20px;
+		  flex-wrap: wrap;
+		}
+
+		.cube-wrapper {
+		  width: 420px;
+		  background: white;
+		  padding: 15px;
+		  border-radius: 10px;
+		  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+		  text-align: left;
+		  display: flex;
+		  flex-direction: column;
+		  justify-content: space-between;
+		  height: 470px;
+		}
+
+		.right-panel {
+		  display: flex;
+		  flex-direction: column;
+		  justify-content: flex-start;
+		  width: 220px;
+		  gap: 15px;
+		  margin-top: 0;
+		}
+
+		.time-row {
+		  display: flex;
+		  justify-content: space-between;
+		  margin-bottom: 10px;
+		}
+
+		#givenTime {
+		  font-size: 18px;
+		  color: #948A8A;
+		  font-weight: bold;
+		  line-height: 34px;
+		}
+
+		#timer {
+		  font-size: 28px;
+		  color: #e53935;
+		  font-weight: bold;
+		}
+
+		.controls {
+		  display: flex;
+		  flex-direction: column;
+		  gap: 8px;
+		  align-items: stretch;
+		}
+
+		.controls button {
+		  width: 100%;
+		  padding: 8px 0;
+		  font-size: 14px;
+		  cursor: pointer;
+		}
+
+		#pauseBtn {
+		  visibility: hidden;
+		}
+
+		.code-box {
+		  display: flex;
+		  flex-direction: column;
+		  gap: 5px;
+		  width: 100%;
+		  align-items: center; /* center horizontally */
+		}
+
+		.code-box label {
+		  font-size: 14px;
+		  font-weight: normal;
+		  text-align: center;
+		  width: 100%;
+		}
+
+		.code-box input {
+		  width: 100%;
+		  text-align: center;
+		  font-size: 18px;
+		  font-weight: bold;
+		  letter-spacing: 3px;
+		  padding: 8px;
+		  border-radius: 5px;
+		  border: 1px solid #ccc;
+		  background-color: #4caf50; /* medium green */
+		  color: #fff;
+		}
+
+		.code-box button {
+		  width: 100%;
+		  padding: 8px 0;
+		  font-size: 14px;
+		  cursor: pointer;
+		}
+
+		footer {
+		  width: 720px;
+		  max-width: 95%;
+		  margin: 10px auto;
+		  padding: 10px 0;
+		  text-align: left;
+		  font-size: 14px;
+		  color: #555;
+		  display: flex;
+		  flex-direction: column;
+		  gap: 2px;
+		}
+
+		footer .copyright {
+		  font-weight: normal;
+		  color: #333;
+		}
+
+		footer .developer {
+		  font-weight: normal;
+		  font-size: 12px;
+		  color: #00796b;
+		  padding: 6px 0px;
+		}
+
+		footer .developer a {
+		  color: #00796b;
+		  font-weight: normal;
+		  text-decoration: underline;
+		}
+
+		@media screen and (max-height: 800px) {
+		  .logo { font-size: 30px; }
+		  .page-title { font-size: 24px; }
+		  .instruction { font-size: 14px; }
+		  .cube-wrapper { height: 430px; }
+		}
+	</style>
+</head>
+<body>
+	<div class="header-container">
+	  <div class="logo">Robert Tourism</div>
+	  <div class="page-title">Play and Win Offers</div>
+	  <div class="instruction">
+		You have limited time of 5 mins to solve the puzzle and win.<br>
+		If you solve and win, you will be given a <strong>Offer Code</strong>, keep it and present to Robert Tourism Office or send on 
+		<a href="https://wa.me/255658735176" target="_blank">Whatsapp +255 658 73 51 76</a>.
+	  </div>
+	</div>
+	<div class="main-content">
+
+	  <!-- Cube section -->
+	  <div class="cube-wrapper">
+		<div class="time-row">
+		  <div id="givenTime">00:05:00</div>
+		  <div id="timer">00:00:00:00</div>
+		</div>
+
+		<div id="cube" style="width:400px;height:400px;margin:auto;"></div>
+	  </div>
+
+	  <!-- Right panel -->
+	  <div class="right-panel">
+		<div class="controls">
+		  <button onclick="scrambleCube()">Scramble</button>
+		  <button id="startStopBtn" onclick="toggleStartStop()">Start</button>
+		  <button id="pauseBtn" onclick="pauseTimer()">Pause</button>
+		</div>
+
+		<div class="code-box">
+		  <label for="offerCodeInput">Offer Code</label>
+		  <input id="offerCodeInput" type="text" placeholder="XXX-XXX-XXX" value="" disabled>
+		  <button disabled>Copy Offer Code</button>
+		</div>
+	  </div>
+
+	</div>
+	<footer>
+	  <div class="copyright">Copyright &copy; 2026 Robert Tourism</div>
+	  <div class="developer">Developer by <a href="https://viramol.co.tz" target="_blank">Viramol</a></div>
+	</footer>
+
+<script>
+  AnimCube3("id=cube&buttonbar=0");
+
+  let timerInterval;
+  let startTime;
+  let elapsedTime = 0;
+  let running = false;
+  let paused = false;
+  const givenTimeMs = 5 * 60 * 1000;
+
+  const codeInput = document.getElementById("offerCodeInput");
+
+  function toggleStartStop() {
+    const btn = document.getElementById("startStopBtn");
+    const pauseBtn = document.getElementById("pauseBtn");
+
+    if (!running && !paused) {
+      elapsedTime = 0;
+      updateTimerDisplay(0);
+      startTime = Date.now();
+      timerInterval = setInterval(updateTimer, 10);
+      running = true;
+      btn.textContent = "Stop";
+      pauseBtn.style.visibility = "visible";
+
+      codeInput.style.backgroundColor = "#4caf50"; // reset to green
+
+    } else if (paused) {
+      startTime = Date.now() - elapsedTime;
+      timerInterval = setInterval(updateTimer, 10);
+      running = true;
+      paused = false;
+      btn.textContent = "Stop";
+      pauseBtn.style.visibility = "visible";
+
+    } else {
+      clearInterval(timerInterval);
+      running = false;
+      paused = false;
+      elapsedTime = 0;
+      btn.textContent = "Start";
+      pauseBtn.style.visibility = "hidden";
+
+      codeInput.style.backgroundColor = "#4caf50"; // reset to green
+    }
+  }
+
+  function pauseTimer() {
+    if (!running) return;
+    clearInterval(timerInterval);
+    elapsedTime = Date.now() - startTime;
+    running = false;
+    paused = true;
+    document.getElementById("startStopBtn").textContent = "Continue";
+    document.getElementById("pauseBtn").style.visibility = "hidden";
+  }
+
+  function updateTimer() {
+    elapsedTime = Date.now() - startTime;
+    updateTimerDisplay(elapsedTime);
+    if (elapsedTime >= givenTimeMs) {
+      clearInterval(timerInterval);
+      running = false;
+      paused = false;
+      document.getElementById("startStopBtn").textContent = "Start";
+      document.getElementById("pauseBtn").style.visibility = "hidden";
+
+      codeInput.style.backgroundColor = "#e57373"; // medium red when time ends
+    }
+  }
+
+  function updateTimerDisplay(ms) {
+    let totalMilliseconds = ms;
+    let hours = Math.floor(totalMilliseconds / 3600000);
+    totalMilliseconds %= 3600000;
+    let minutes = Math.floor(totalMilliseconds / 60000);
+    totalMilliseconds %= 60000;
+    let seconds = Math.floor(totalMilliseconds / 1000);
+    let milliseconds = Math.floor((totalMilliseconds % 1000) / 10);
+
+    document.getElementById("timer").textContent =
+      `${String(hours).padStart(2,'0')}:` +
+      `${String(minutes).padStart(2,'0')}:` +
+      `${String(seconds).padStart(2,'0')}:` +
+      `${String(milliseconds).padStart(2,'0')}`;
+  }
+
+  function scrambleCube() {
+    AnimCube3("id=cube&move=random&buttonbar=0");
+  }
+</script>
+
+</body>
+</html>
